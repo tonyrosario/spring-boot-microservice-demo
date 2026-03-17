@@ -133,7 +133,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-007 — Create GlobalExceptionHandler
-**Status:** TODO  
+**Status:** DONE — created GlobalExceptionHandler handling 400, 404, 409, and 500 responses
 **Scope:** `controller`  
 **Files:**
 - `src/main/java/com/demo/productcatalog/controller/GlobalExceptionHandler.java`
