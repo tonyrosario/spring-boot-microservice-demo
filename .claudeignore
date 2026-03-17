@@ -1,0 +1,37 @@
+# Build output
+build/
+.gradle/
+gradle/wrapper/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.jks
+
+# Logs
+*.log
+logs/
+
+# Test output
+build/reports/
+build/test-results/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Git
+.git/

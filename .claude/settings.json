@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git log *)",
+      "Bash(find src *)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "Bash(touch *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(find build *)",
+      "Bash(find .gradle *)",
+      "Bash(cat ~/.bashrc)",
+      "Bash(cat ~/.zshrc)",
+      "Bash(env)",
+      "Bash(printenv)"
+    ]
+  }
+}
