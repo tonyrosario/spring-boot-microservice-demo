@@ -154,7 +154,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-008 — Create ProductController
-**Status:** TODO  
+**Status:** DONE — created ProductController with full CRUD endpoints and constructor injection
 **Scope:** `controller`  
 **Files:**
 - `src/main/java/com/demo/productcatalog/controller/ProductController.java`
