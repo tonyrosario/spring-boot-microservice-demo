@@ -93,7 +93,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-005 — Create ProductService
-**Status:** TODO  
+**Status:** DONE — created ProductService with CRUD, DTO mapping, and exception throwing; added existsBySku to repository
 **Scope:** `service`  
 **Files:**
 - `src/main/java/com/demo/productcatalog/service/ProductService.java`
