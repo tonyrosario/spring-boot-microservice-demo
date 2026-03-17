@@ -55,7 +55,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-003 — Create ProductRequest DTO
-**Status:** TODO  
+**Status:** DONE — created ProductRequest with Bean Validation and Lombok @Builder(toBuilder = true)
 **Scope:** `dto`  
 **Files:**
 - `src/main/java/com/demo/productcatalog/dto/ProductRequest.java`
