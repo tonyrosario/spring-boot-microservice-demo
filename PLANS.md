@@ -193,7 +193,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-010 — Smoke test — application boots and endpoints reachable
-**Status:** TODO  
+**Status:** DONE — smoke tests pass; discovered @AutoConfigureMockMvc moved to org.springframework.boot.webmvc.test.autoconfigure in Spring Boot 4
 **Scope:** `test`  
 **Files:**
 - `src/test/java/com/demo/productcatalog/ProductCatalogApplicationTests.java`
