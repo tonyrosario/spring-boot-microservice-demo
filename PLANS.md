@@ -114,7 +114,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-006 — Create custom exceptions
-**Status:** TODO  
+**Status:** DONE — created ProductNotFoundException and DuplicateSkuException in domain/exception
 **Scope:** `domain`  
 **Files:**
 - `src/main/java/com/demo/productcatalog/domain/exception/ProductNotFoundException.java`
