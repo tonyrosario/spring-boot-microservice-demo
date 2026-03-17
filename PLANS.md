@@ -15,7 +15,7 @@
 responses use DTOs, errors are handled globally.
 
 ### M1-001 — Add Moneta dependency and create MoneyEmbeddable
-**Status:** TODO  
+**Status:** DONE — added moneta:1.4.4, created MoneyEmbeddable with of()/toMonetaryAmount()
 **Scope:** `domain`  
 **Files:**
 - `build.gradle` — add `org.javamoney:moneta` dependency
