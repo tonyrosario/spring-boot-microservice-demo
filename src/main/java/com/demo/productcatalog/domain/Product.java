@@ -1,6 +1,9 @@
 package com.demo.productcatalog.domain;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,9 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -41,10 +41,12 @@ public class Product {
     @Size(max = 1000)
     private String description;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "amount", column = @Column(name = "price_amount", nullable = false, precision = 19, scale = 4)),
+        @AttributeOverride(name = "currency", column = @Column(name = "price_currency", nullable = false, length = 3))
+    })
+    private MoneyEmbeddable price;
 
     @NotBlank(message = "SKU is required")
     @Column(nullable = false, unique = true)

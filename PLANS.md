@@ -35,7 +35,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-002 — Refactor Product entity to use MoneyEmbeddable
-**Status:** TODO  
+**Status:** DONE — replaced BigDecimal price with @Embedded MoneyEmbeddable mapped to price_amount/price_currency
 **Scope:** `domain`  
 **Files:**
 - `src/main/java/com/demo/productcatalog/domain/Product.java`
