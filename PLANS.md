@@ -175,7 +175,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-009 — Configure application.properties for H2 dev database
-**Status:** TODO  
+**Status:** DONE — configured H2 datasource, console, ddl-auto, show-sql, and Actuator endpoints
 **Scope:** `gradle`  
 **Files:**
 - `src/main/resources/application.properties`
