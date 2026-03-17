@@ -75,7 +75,7 @@ responses use DTOs, errors are handled globally.
 ---
 
 ### M1-004 — Create ProductResponse DTO
-**Status:** TODO  
+**Status:** DONE — created ProductResponse with all fields and Lombok @Builder
 **Scope:** `dto`  
 **Files:**
 - `src/main/java/com/demo/productcatalog/dto/ProductResponse.java`
