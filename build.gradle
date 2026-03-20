@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.javamoney:moneta:1.4.4'
+	implementation 'org.javamoney:moneta:1.4.5'
 	implementation 'org.springframework.boot:spring-boot-h2console'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
