@@ -237,7 +237,7 @@ via GitHub Actions.
 | M3-002 | Publish JaCoCo report as workflow artifact | DONE — uploads build/reports/jacoco/ with 14-day retention |
 | M3-003 | Add build status badge to README | DONE — CI badge added; Spring Boot version corrected to 4.0 |
 | M3-004 | Add Dependabot configuration | DONE — .github/dependabot.yml covers gradle and github-actions weekly |
-| M3-005 | Add pre-commit hook via .githooks/ + Gradle installGitHooks task | DONE — .githooks/pre-commit runs ./gradlew check; installGitHooks task copies and sets executable |
+| M3-005 | Add pre-commit hook via .githooks/ + Gradle installGitHooks task | DONE — .githooks/pre-commit runs checkstyleMain + checkstyleTest (~2-3s); installGitHooks is Exec task (configuration cache compatible) |
 
 ---
 
