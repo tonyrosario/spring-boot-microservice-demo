@@ -10,16 +10,17 @@
 ---
 
 ## Current Milestone
-**M2 — Test Coverage**
+**M3 — CI/CD Pipeline**
 
 ## Current Status
 **READY TO START**
 
 ## Last Known Good State
 - `./gradlew build` — passes clean
-- `./gradlew check` — all tests pass, Checkstyle clean, no violations
+- `./gradlew check` — all tests pass, Checkstyle clean, JaCoCo ≥ 80% line coverage gate passes
+- `./gradlew jacocoTestReport` — generates HTML + XML in `build/reports/jacoco/`
+- `./gradlew pitest` — PIT configured with 70% mutation threshold (info.solidsoft.pitest 1.19.0-rc.3)
 - Spring Boot **4.0.3**, Java 21
-- All M1 tasks committed, full CRUD API functional with H2 in-memory database
 
 ## What Has Been Built
 
@@ -43,13 +44,13 @@
 - [x] M1-010 — Smoke tests: context loads, `POST` returns 201, `GET` unknown id
   returns 404, `POST` missing name returns 400
 
-### Not Started — M2 (Test Coverage)
-- [ ] M2-001 — Add JaCoCo plugin and enforce 80% line coverage
-- [ ] M2-002 — Add PIT mutation testing plugin and enforce 70% score
-- [ ] M2-003 — ProductService unit tests — happy path
-- [ ] M2-004 — ProductService unit tests — edge cases and exceptions
-- [ ] M2-005 — ProductController integration tests via MockMvc
-- [ ] M2-006 — ProductRepository slice tests via @DataJpaTest
+### Completed — M2 (Test Coverage)
+- [x] M2-001 — JaCoCo plugin; 80% line coverage gate wired to `check`
+- [x] M2-002 — PIT plugin (1.19.0-rc.3, Gradle 9 compatible); 70% mutation threshold configured
+- [x] M2-003 — `ProductServiceTest` — happy path for all 5 service methods
+- [x] M2-004 — `ProductServiceExceptionTest` — duplicate SKU and not-found exception paths
+- [x] M2-005 — `ProductControllerTest` (@WebMvcTest, happy path) + `ProductControllerExceptionTest` (400/404/409)
+- [x] M2-006 — `ProductRepositoryTest` (@DataJpaTest) — existsBySku, findAllByActiveTrue, findBySkuAndActiveTrue
 
 ---
 
@@ -69,7 +70,7 @@
 | Milestone | Status | Completed |
 |-----------|--------|-----------|
 | M1 — Core API | COMPLETE | 2026-03-17 |
-| M2 — Test Coverage | TODO | — |
+| M2 — Test Coverage | COMPLETE | 2026-03-19 |
 | M3 — CI/CD Pipeline | TODO | — |
 | M4 — Production Readiness | TODO | — |
 | M5 — Polish and Portfolio Signal | TODO | — |
@@ -82,3 +83,5 @@
 |------|---------------|----------------|
 | 2026-03-17 | Project scaffolded, Product entity, ProductRepository, Checkstyle | Ready for M1-001 |
 | 2026-03-17 | Completed all M1 tasks (M1-001 through M1-010); full CRUD API live on H2 | Ready for M2-001 |
+| 2026-03-19 | Refactored all tests to CLAUDE.md standards (ProductTestFactory, @WebMvcTest, naming convention, file size split) | Ready for M2 execution |
+| 2026-03-19 | Completed all M2 tasks (M2-001 through M2-006); JaCoCo + PIT configured, full test suite passing | Ready for M3-001 |

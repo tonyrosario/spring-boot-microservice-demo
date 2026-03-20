@@ -217,12 +217,12 @@ all enforced in the build.
 
 | ID | Task | Status |
 |----|------|--------|
-| M2-001 | Add JaCoCo plugin and enforce 80% line coverage | TODO |
-| M2-002 | Add PIT mutation testing plugin and enforce 70% score | TODO |
-| M2-003 | ProductService unit tests — happy path | TODO |
-| M2-004 | ProductService unit tests — edge cases and exceptions | TODO |
-| M2-005 | ProductController integration tests via MockMvc | TODO |
-| M2-006 | ProductRepository slice tests via @DataJpaTest | TODO |
+| M2-001 | Add JaCoCo plugin and enforce 80% line coverage | DONE — jacoco plugin added; 80% line coverage gate wired to check via jacocoTestCoverageVerification |
+| M2-002 | Add PIT mutation testing plugin and enforce 70% score | DONE — info.solidsoft.pitest 1.19.0-rc.3 added (Gradle 9 compatible); mutationThreshold = 70 configured |
+| M2-003 | ProductService unit tests — happy path | DONE — ProductServiceTest covers create/findById/findAll/update/deactivate happy paths |
+| M2-004 | ProductService unit tests — edge cases and exceptions | DONE — ProductServiceExceptionTest covers duplicate SKU and not-found across all methods |
+| M2-005 | ProductController integration tests via MockMvc | DONE — ProductControllerTest (@WebMvcTest) covers happy path; ProductControllerExceptionTest covers 400/404/409 |
+| M2-006 | ProductRepository slice tests via @DataJpaTest | DONE — ProductRepositoryTest covers existsBySku, findAllByActiveTrue, findBySkuAndActiveTrue |
 
 ---
 

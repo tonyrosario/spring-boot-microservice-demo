@@ -33,6 +33,11 @@
 
 ## Low Priority
 
+- [2026-03-19] Upgrade `info.solidsoft.pitest` to a stable Gradle 9-compatible release
+  — currently pinned to `1.19.0-rc.3` (RC) because `1.15.0` (latest stable) uses
+  `reporting.baseDir` which was removed in Gradle 9; swap to a stable release once
+  one is published — track at https://plugins.gradle.org/plugin/info.solidsoft.pitest
+
 - [2026-03-17] Add rate limiting via Spring Cloud Gateway or Bucket4j
 - [2026-03-17] Add Redis caching for `GET /api/products/{id}`
   — `@Cacheable` with TTL configuration
