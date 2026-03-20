@@ -1,10 +1,18 @@
 name: CI
 
+# Run on every branch push for fast feedback.
+# Coverage gate is only enforced on main and PRs targeting main.
 on:
   push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+
+# github.head_ref is set on pull_request (source branch name, e.g. "my-feature").
+# github.ref_name is the short ref on push (e.g. "my-feature", without "refs/heads/").
+# Together they collapse push + pull_request events for the same branch into one group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -23,11 +31,19 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Run checks
-        run: ./gradlew check
+      - name: Compile, lint, and test
+        run: ./gradlew checkstyleMain checkstyleTest test
+
+      - name: Generate coverage report
+        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+        run: ./gradlew jacocoTestReport
+
+      - name: Enforce coverage gate
+        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+        run: ./gradlew jacocoTestCoverageVerification
 
       - name: Upload JaCoCo report
-        if: always()
+        if: "!cancelled() && (github.ref == 'refs/heads/main' || github.event_name == 'pull_request')"
         uses: actions/upload-artifact@v7
         with:
           name: jacoco-report
