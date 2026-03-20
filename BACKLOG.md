@@ -33,6 +33,12 @@
 
 ## Low Priority
 
+- [2026-03-19] Add "Local dev setup" section to README (M5)
+  — document two one-time setup steps after cloning:
+  1. `./gradlew installGitHooks` — installs the pre-commit hook
+  2. add `org.gradle.daemon=true` to `~/.gradle/gradle.properties` — re-enables
+     the daemon locally (project `gradle.properties` sets it to `false` for CI)
+
 - [2026-03-19] Upgrade `info.solidsoft.pitest` to a stable Gradle 9-compatible release
   — currently pinned to `1.19.0-rc.3` (RC) because `1.15.0` (latest stable) uses
   `reporting.baseDir` which was removed in Gradle 9; swap to a stable release once

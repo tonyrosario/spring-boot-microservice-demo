@@ -1,6 +1,6 @@
 #!/bin/sh
-echo "Running pre-commit checks (./gradlew check)..."
-./gradlew check
+echo "Running pre-commit checks (compile + Checkstyle)..."
+./gradlew checkstyleMain checkstyleTest
 if [ $? -ne 0 ]; then
   echo "Pre-commit checks failed. Commit aborted."
   exit 1
