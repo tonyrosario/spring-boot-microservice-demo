@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "Running pre-commit checks (./gradlew check)..."
+./gradlew check
+if [ $? -ne 0 ]; then
+  echo "Pre-commit checks failed. Commit aborted."
+  exit 1
+fi

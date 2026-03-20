@@ -10,7 +10,7 @@
 ---
 
 ## Current Milestone
-**M3 — CI/CD Pipeline**
+**M4 — Production Readiness**
 
 ## Current Status
 **READY TO START**
@@ -19,7 +19,9 @@
 - `./gradlew build` — passes clean
 - `./gradlew check` — all tests pass, Checkstyle clean, JaCoCo ≥ 80% line coverage gate passes
 - `./gradlew jacocoTestReport` — generates HTML + XML in `build/reports/jacoco/`
-- `./gradlew pitest` — PIT configured with 70% mutation threshold (info.solidsoft.pitest 1.19.0-rc.3)
+- `./gradlew pitest` — 83% mutation kill rate, passes 70% threshold
+- `./gradlew installGitHooks` — installs pre-commit hook that runs `./gradlew check`
+- CI runs on every push and PR to main via `.github/workflows/ci.yml`
 - Spring Boot **4.0.3**, Java 21
 
 ## What Has Been Built
@@ -43,6 +45,13 @@
   show-sql, Actuator (`/health`, `/info`)
 - [x] M1-010 — Smoke tests: context loads, `POST` returns 201, `GET` unknown id
   returns 404, `POST` missing name returns 400
+
+### Completed — M3 (CI/CD Pipeline)
+- [x] M3-001 — GitHub Actions CI workflow (`.github/workflows/ci.yml`)
+- [x] M3-002 — JaCoCo report published as workflow artifact (14-day retention)
+- [x] M3-003 — CI badge in README; Spring Boot version corrected to 4.0
+- [x] M3-004 — Dependabot for Gradle + GitHub Actions (weekly)
+- [x] M3-005 — `.githooks/pre-commit` + `installGitHooks` Gradle task
 
 ### Completed — M2 (Test Coverage)
 - [x] M2-001 — JaCoCo plugin; 80% line coverage gate wired to `check`
@@ -71,7 +80,7 @@
 |-----------|--------|-----------|
 | M1 — Core API | COMPLETE | 2026-03-17 |
 | M2 — Test Coverage | COMPLETE | 2026-03-19 |
-| M3 — CI/CD Pipeline | TODO | — |
+| M3 — CI/CD Pipeline | COMPLETE | 2026-03-19 |
 | M4 — Production Readiness | TODO | — |
 | M5 — Polish and Portfolio Signal | TODO | — |
 
@@ -85,3 +94,4 @@
 | 2026-03-17 | Completed all M1 tasks (M1-001 through M1-010); full CRUD API live on H2 | Ready for M2-001 |
 | 2026-03-19 | Refactored all tests to CLAUDE.md standards (ProductTestFactory, @WebMvcTest, naming convention, file size split) | Ready for M2 execution |
 | 2026-03-19 | Completed all M2 tasks (M2-001 through M2-006); JaCoCo + PIT configured, full test suite passing | Ready for M3-001 |
+| 2026-03-19 | Completed all M3 tasks (M3-001 through M3-005); CI workflow, JaCoCo artifact, badge, Dependabot, pre-commit hook | Ready for M4-001 |

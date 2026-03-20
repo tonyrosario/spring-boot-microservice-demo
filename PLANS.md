@@ -233,11 +233,11 @@ via GitHub Actions.
 
 | ID | Task | Status |
 |----|------|--------|
-| M3-001 | Add GitHub Actions CI workflow | TODO |
-| M3-002 | Publish JaCoCo report as workflow artifact | TODO |
-| M3-003 | Add build status badge to README | TODO |
-| M3-004 | Add Dependabot configuration | TODO |
-| M3-005 | Add Husky pre-commit hooks for Checkstyle and tests | TODO |
+| M3-001 | Add GitHub Actions CI workflow | DONE — .github/workflows/ci.yml runs check on push and PR to main |
+| M3-002 | Publish JaCoCo report as workflow artifact | DONE — uploads build/reports/jacoco/ with 14-day retention |
+| M3-003 | Add build status badge to README | DONE — CI badge added; Spring Boot version corrected to 4.0 |
+| M3-004 | Add Dependabot configuration | DONE — .github/dependabot.yml covers gradle and github-actions weekly |
+| M3-005 | Add pre-commit hook via .githooks/ + Gradle installGitHooks task | DONE — .githooks/pre-commit runs ./gradlew check; installGitHooks task copies and sets executable |
 
 ---
 

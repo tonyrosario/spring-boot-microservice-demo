@@ -87,3 +87,15 @@ pitest {
 
 check.dependsOn jacocoTestCoverageVerification
 jacocoTestCoverageVerification.dependsOn jacocoTestReport
+
+tasks.register('installGitHooks') {
+	description = 'Copies pre-commit hook from .githooks/ into .git/hooks/'
+	doLast {
+		copy {
+			from '.githooks'
+			include 'pre-commit'
+			into '.git/hooks'
+		}
+		file('.git/hooks/pre-commit').setExecutable(true)
+	}
+}
