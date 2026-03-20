@@ -19,15 +19,17 @@
 - `./gradlew build` — passes clean
 - `./gradlew check` — all tests pass, Checkstyle clean, JaCoCo ≥ 80% line coverage gate passes
 - `./gradlew jacocoTestReport` — generates HTML + XML in `build/reports/jacoco/`
-- `./gradlew pitest` — 83% mutation kill rate, passes 70% threshold
-- `./gradlew installGitHooks` — installs pre-commit hook that runs `./gradlew check`
+- `./gradlew pitest` — 83% mutation kill rate, 86% test strength, passes 70% threshold
+- `./gradlew installGitHooks` — installs pre-commit hook (Exec task, configuration cache compatible)
+- Pre-commit hook runs `checkstyleMain + checkstyleTest` only (~2-3s); full suite runs on CI
 - CI runs on every push and PR to main via `.github/workflows/ci.yml`
-- Spring Boot **4.0.3**, Java 21
+- Spring Boot **4.0.4**, moneta **1.4.5**, Java 21
+- `gradle.properties` — configuration cache enabled, parallel builds, daemon=false for CI
 
 ## What Has Been Built
 
 ### Completed — M1 (Core API)
-- [x] M1-001 — `org.javamoney:moneta:1.4.4` added; `MoneyEmbeddable` value object
+- [x] M1-001 — `org.javamoney:moneta:1.4.5` added; `MoneyEmbeddable` value object
   (`@Embeddable`, `@Getter`, `of()`, `toMonetaryAmount()`)
 - [x] M1-002 — `Product` entity refactored to use `@Embedded MoneyEmbeddable price`
   mapped to `price_amount DECIMAL(19,4)` / `price_currency VARCHAR(3)`
@@ -46,13 +48,6 @@
 - [x] M1-010 — Smoke tests: context loads, `POST` returns 201, `GET` unknown id
   returns 404, `POST` missing name returns 400
 
-### Completed — M3 (CI/CD Pipeline)
-- [x] M3-001 — GitHub Actions CI workflow (`.github/workflows/ci.yml`)
-- [x] M3-002 — JaCoCo report published as workflow artifact (14-day retention)
-- [x] M3-003 — CI badge in README; Spring Boot version corrected to 4.0
-- [x] M3-004 — Dependabot for Gradle + GitHub Actions (weekly)
-- [x] M3-005 — `.githooks/pre-commit` + `installGitHooks` Gradle task
-
 ### Completed — M2 (Test Coverage)
 - [x] M2-001 — JaCoCo plugin; 80% line coverage gate wired to `check`
 - [x] M2-002 — PIT plugin (1.19.0-rc.3, Gradle 9 compatible); 70% mutation threshold configured
@@ -61,16 +56,22 @@
 - [x] M2-005 — `ProductControllerTest` (@WebMvcTest, happy path) + `ProductControllerExceptionTest` (400/404/409)
 - [x] M2-006 — `ProductRepositoryTest` (@DataJpaTest) — existsBySku, findAllByActiveTrue, findBySkuAndActiveTrue
 
+### Completed — M3 (CI/CD Pipeline)
+- [x] M3-001 — GitHub Actions CI workflow (`.github/workflows/ci.yml`)
+- [x] M3-002 — JaCoCo report published as workflow artifact (14-day retention)
+- [x] M3-003 — CI badge in README; Spring Boot version corrected to 4.0
+- [x] M3-004 — Dependabot for Gradle + GitHub Actions (weekly)
+- [x] M3-005 — `.githooks/pre-commit` (checkstyleMain + checkstyleTest, ~2-3s) +
+  `installGitHooks` Exec task (configuration cache compatible)
+
 ---
 
 ## Known Issues / Decisions Pending
 - `Product.java` still carries `@NotBlank` and `@Size` on `name`, `description`,
   and `sku` fields — CLAUDE.md says validation belongs on DTOs, not entities.
-  Not addressed in M1 scope; consider cleaning up in M2 or a dedicated refactor task.
-- **Spring Boot 4 package change:** `@AutoConfigureMockMvc` moved from
-  `org.springframework.boot.test.autoconfigure.web.servlet` to
-  `org.springframework.boot.webmvc.test.autoconfigure` — use the new package
-  in all M2 MockMvc tests.
+  Deferred; consider cleaning up in a dedicated refactor before M5.
+- `info.solidsoft.pitest` pinned to `1.19.0-rc.3` (RC) — no stable release supports
+  Gradle 9 yet; tracked in BACKLOG.md.
 
 ---
 
@@ -92,6 +93,7 @@
 |------|---------------|----------------|
 | 2026-03-17 | Project scaffolded, Product entity, ProductRepository, Checkstyle | Ready for M1-001 |
 | 2026-03-17 | Completed all M1 tasks (M1-001 through M1-010); full CRUD API live on H2 | Ready for M2-001 |
-| 2026-03-19 | Refactored all tests to CLAUDE.md standards (ProductTestFactory, @WebMvcTest, naming convention, file size split) | Ready for M2 execution |
-| 2026-03-19 | Completed all M2 tasks (M2-001 through M2-006); JaCoCo + PIT configured, full test suite passing | Ready for M3-001 |
-| 2026-03-19 | Completed all M3 tasks (M3-001 through M3-005); CI workflow, JaCoCo artifact, badge, Dependabot, pre-commit hook | Ready for M4-001 |
+| 2026-03-19 | Updated CLAUDE.md with testing standards (file size, naming, annotation stacks, ProductTestFactory, forbidden patterns, self-evaluation gate) | Ready for test refactor |
+| 2026-03-19 | Refactored all tests to CLAUDE.md standards: created ProductTestFactory, rewrote ProductControllerTest to @WebMvcTest + @MockitoBean, fixed verify()-only assertion, split ProductServiceTest into happy path + exception files, renamed all methods to should_[outcome]_when_[condition] across all test files; corrected @MockBean → @MockitoBean in CLAUDE.md | Ready for M2 execution |
+| 2026-03-19 | Completed M2 (M2-001 through M2-006): JaCoCo 80% gate, PIT 70% threshold (83% actual kill rate), ProductControllerExceptionTest, ProductRepositoryTest | Ready for M3-001 |
+| 2026-03-19 | Completed M3 (M3-001 through M3-005): CI workflow, JaCoCo artifact, badge, Dependabot, pre-commit hook; tuned gradle.properties (config cache, parallel, daemon=false); lightened pre-commit to checkstyleMain + checkstyleTest; fixed installGitHooks for configuration cache compatibility; bumped Spring Boot 4.0.4 + moneta 1.4.5 + GitHub Actions versions | Ready for M4-001 |
