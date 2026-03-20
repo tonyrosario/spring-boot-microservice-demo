@@ -1,36 +1,40 @@
 package com.demo.productcatalog.controller;
 
-import com.demo.productcatalog.dto.ProductRequest;
 import com.demo.productcatalog.dto.ProductResponse;
 import com.demo.productcatalog.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(ProductController.class)
 @DisplayName("ProductController")
 class ProductControllerTest {
 
-    @Mock
-    private ProductService productService;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @InjectMocks
-    private ProductController productController;
+    @MockitoBean
+    private ProductService productService;
 
     private ProductResponse sampleResponse;
 
@@ -39,12 +43,13 @@ class ProductControllerTest {
         sampleResponse = ProductResponse.builder()
                 .id(1L)
                 .name("Widget")
+                .description("A fine widget")
                 .sku("WGT-001")
                 .priceAmount(new BigDecimal("9.99"))
                 .priceCurrency("USD")
                 .active(true)
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
+                .createdAt(Instant.parse("2026-01-01T00:00:00Z"))
+                .updatedAt(Instant.parse("2026-01-01T00:00:00Z"))
                 .build();
     }
 
@@ -53,18 +58,24 @@ class ProductControllerTest {
     class Create {
 
         @Test
-        @DisplayName("returns 201 with ProductResponse on success")
-        void returns201() {
-            ProductRequest request = ProductRequest.builder()
-                    .name("Widget").sku("WGT-001")
-                    .priceAmount(new BigDecimal("9.99")).priceCurrency("USD")
-                    .build();
-            when(productService.create(request)).thenReturn(sampleResponse);
+        @DisplayName("returns 201 with product body when request is valid")
+        void should_return201WithBody_when_requestIsValid() throws Exception {
+            when(productService.create(any())).thenReturn(sampleResponse);
 
-            ResponseEntity<ProductResponse> response = productController.create(request);
-
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-            assertThat(response.getBody()).isEqualTo(sampleResponse);
+            mockMvc.perform(post("/api/products")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                      "name": "Widget",
+                                      "description": "A fine widget",
+                                      "sku": "WGT-001",
+                                      "priceAmount": 9.99,
+                                      "priceCurrency": "USD"
+                                    }
+                                    """))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").value(1))
+                    .andExpect(jsonPath("$.sku").value("WGT-001"));
         }
     }
 
@@ -73,14 +84,14 @@ class ProductControllerTest {
     class FindById {
 
         @Test
-        @DisplayName("returns 200 with ProductResponse when found")
-        void returns200() {
+        @DisplayName("returns 200 with product body when product exists")
+        void should_return200WithBody_when_productExists() throws Exception {
             when(productService.findById(1L)).thenReturn(sampleResponse);
 
-            ResponseEntity<ProductResponse> response = productController.findById(1L);
-
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-            assertThat(response.getBody()).isEqualTo(sampleResponse);
+            mockMvc.perform(get("/api/products/1"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(1))
+                    .andExpect(jsonPath("$.name").value("Widget"));
         }
     }
 
@@ -89,14 +100,13 @@ class ProductControllerTest {
     class FindAll {
 
         @Test
-        @DisplayName("returns 200 with list of ProductResponse")
-        void returns200WithList() {
+        @DisplayName("returns 200 with list of products")
+        void should_return200WithList_when_productsExist() throws Exception {
             when(productService.findAll()).thenReturn(List.of(sampleResponse));
 
-            ResponseEntity<List<ProductResponse>> response = productController.findAll();
-
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-            assertThat(response.getBody()).hasSize(1);
+            mockMvc.perform(get("/api/products"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].sku").value("WGT-001"));
         }
     }
 
@@ -105,18 +115,22 @@ class ProductControllerTest {
     class Update {
 
         @Test
-        @DisplayName("returns 200 with updated ProductResponse")
-        void returns200() {
-            ProductRequest request = ProductRequest.builder()
-                    .name("Widget").sku("WGT-001")
-                    .priceAmount(new BigDecimal("19.99")).priceCurrency("USD")
-                    .build();
-            when(productService.update(1L, request)).thenReturn(sampleResponse);
+        @DisplayName("returns 200 with updated product body when product exists")
+        void should_return200WithUpdatedBody_when_productExists() throws Exception {
+            when(productService.update(eq(1L), any())).thenReturn(sampleResponse);
 
-            ResponseEntity<ProductResponse> response = productController.update(1L, request);
-
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-            assertThat(response.getBody()).isEqualTo(sampleResponse);
+            mockMvc.perform(put("/api/products/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                      "name": "Widget",
+                                      "sku": "WGT-001",
+                                      "priceAmount": 9.99,
+                                      "priceCurrency": "USD"
+                                    }
+                                    """))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(1));
         }
     }
 
@@ -125,12 +139,10 @@ class ProductControllerTest {
     class Deactivate {
 
         @Test
-        @DisplayName("returns 204 and delegates to service")
-        void returns204() {
-            ResponseEntity<Void> response = productController.deactivate(1L);
-
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            verify(productService).deactivate(1L);
+        @DisplayName("returns 204 when product is deactivated")
+        void should_return204_when_productIsDeactivated() throws Exception {
+            mockMvc.perform(delete("/api/products/1"))
+                    .andExpect(status().isNoContent());
         }
     }
 }

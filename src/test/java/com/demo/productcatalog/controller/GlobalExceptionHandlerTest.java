@@ -35,14 +35,12 @@ class GlobalExceptionHandlerTest {
 
         @Test
         @DisplayName("returns 404 with error body")
-        void returns404() {
+        void should_return404WithErrorBody_when_productNotFound() {
             ResponseEntity<Map<String, Object>> response =
                     handler.handleProductNotFound(new ProductNotFoundException(1L));
 
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-            assertThat(response.getBody()).containsKey("status");
-            assertThat(response.getBody()).containsKey("message");
-            assertThat(response.getBody()).containsKey("timestamp");
+            assertThat(response.getBody()).containsKeys("status", "message", "timestamp");
             assertThat(response.getBody().get("message")).asString().contains("1");
         }
     }
@@ -53,14 +51,12 @@ class GlobalExceptionHandlerTest {
 
         @Test
         @DisplayName("returns 409 with error body")
-        void returns409() {
+        void should_return409WithErrorBody_when_skuIsDuplicate() {
             ResponseEntity<Map<String, Object>> response =
                     handler.handleDuplicateSku(new DuplicateSkuException("WGT-001"));
 
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-            assertThat(response.getBody()).containsKey("status");
-            assertThat(response.getBody()).containsKey("message");
-            assertThat(response.getBody()).containsKey("timestamp");
+            assertThat(response.getBody()).containsKeys("status", "message", "timestamp");
             assertThat(response.getBody().get("message")).asString().contains("WGT-001");
         }
     }
@@ -71,7 +67,7 @@ class GlobalExceptionHandlerTest {
 
         @Test
         @DisplayName("returns 400 with field-level validation errors")
-        void returns400WithFieldErrors() {
+        void should_return400WithFieldErrors_when_validationFails() {
             MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
             BindingResult bindingResult = mock(BindingResult.class);
             when(ex.getBindingResult()).thenReturn(bindingResult);
@@ -82,9 +78,7 @@ class GlobalExceptionHandlerTest {
             ResponseEntity<Map<String, Object>> response = handler.handleValidation(ex);
 
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-            assertThat(response.getBody()).containsKey("status");
-            assertThat(response.getBody()).containsKey("errors");
-            assertThat(response.getBody()).containsKey("timestamp");
+            assertThat(response.getBody()).containsKeys("status", "errors", "timestamp");
         }
     }
 
@@ -94,14 +88,12 @@ class GlobalExceptionHandlerTest {
 
         @Test
         @DisplayName("returns 500 for unexpected exceptions")
-        void returns500() {
+        void should_return500_when_unexpectedExceptionOccurs() {
             ResponseEntity<Map<String, Object>> response =
                     handler.handleGeneric(new RuntimeException("unexpected"));
 
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-            assertThat(response.getBody()).containsKey("status");
-            assertThat(response.getBody()).containsKey("message");
-            assertThat(response.getBody()).containsKey("timestamp");
+            assertThat(response.getBody()).containsKeys("status", "message", "timestamp");
         }
     }
 }

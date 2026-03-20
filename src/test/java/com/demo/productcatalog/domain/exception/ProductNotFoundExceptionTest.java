@@ -9,9 +9,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductNotFoundExceptionTest {
 
     @Test
-    @DisplayName("message includes the product id")
-    void messageIncludesId() {
+    @DisplayName("includes the product id in the message")
+    void should_includeProductId_when_constructed() {
         ProductNotFoundException ex = new ProductNotFoundException(42L);
+
         assertThat(ex.getMessage()).isEqualTo("Product not found with id: 42");
     }
 }

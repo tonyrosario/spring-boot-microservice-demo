@@ -39,8 +39,9 @@ class ProductRequestTest {
 
         @Test
         @DisplayName("produces no constraint violations")
-        void noViolations() {
+        void should_haveNoViolations_when_allFieldsAreValid() {
             Set<ConstraintViolation<ProductRequest>> violations = validator.validate(validRequest());
+
             assertThat(violations).isEmpty();
         }
     }
@@ -51,9 +52,11 @@ class ProductRequestTest {
 
         @Test
         @DisplayName("rejects blank name")
-        void rejectsBlankName() {
+        void should_rejectName_when_nameIsBlank() {
             ProductRequest request = validRequest().toBuilder().name("").build();
+
             Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
+
             assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("name"));
         }
     }
@@ -64,9 +67,11 @@ class ProductRequestTest {
 
         @Test
         @DisplayName("rejects blank SKU")
-        void rejectsBlankSku() {
+        void should_rejectSku_when_skuIsBlank() {
             ProductRequest request = validRequest().toBuilder().sku("").build();
+
             Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
+
             assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("sku"));
         }
     }
@@ -77,17 +82,21 @@ class ProductRequestTest {
 
         @Test
         @DisplayName("rejects null priceAmount")
-        void rejectsNullPriceAmount() {
+        void should_rejectPriceAmount_when_priceAmountIsNull() {
             ProductRequest request = validRequest().toBuilder().priceAmount(null).build();
+
             Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
+
             assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("priceAmount"));
         }
 
         @Test
         @DisplayName("rejects zero priceAmount")
-        void rejectsZeroPriceAmount() {
+        void should_rejectPriceAmount_when_priceAmountIsZero() {
             ProductRequest request = validRequest().toBuilder().priceAmount(BigDecimal.ZERO).build();
+
             Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
+
             assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("priceAmount"));
         }
     }
@@ -98,17 +107,21 @@ class ProductRequestTest {
 
         @Test
         @DisplayName("rejects blank priceCurrency")
-        void rejectsBlankCurrency() {
+        void should_rejectPriceCurrency_when_priceCurrencyIsBlank() {
             ProductRequest request = validRequest().toBuilder().priceCurrency("").build();
+
             Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
+
             assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("priceCurrency"));
         }
 
         @Test
         @DisplayName("rejects non-ISO-4217 currency code")
-        void rejectsInvalidCurrencyCode() {
+        void should_rejectPriceCurrency_when_currencyCodeIsNotIso4217() {
             ProductRequest request = validRequest().toBuilder().priceCurrency("us").build();
+
             Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
+
             assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("priceCurrency"));
         }
     }

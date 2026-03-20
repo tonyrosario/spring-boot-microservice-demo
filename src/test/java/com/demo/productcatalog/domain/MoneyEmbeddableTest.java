@@ -19,7 +19,7 @@ class MoneyEmbeddableTest {
 
         @Test
         @DisplayName("stores the amount and currency from a MonetaryAmount")
-        void storesAmountAndCurrency() {
+        void should_storeAmountAndCurrency_when_createdFromMonetaryAmount() {
             MonetaryAmount source = Money.of(new BigDecimal("19.99"), "USD");
 
             MoneyEmbeddable money = MoneyEmbeddable.of(source);
@@ -35,7 +35,7 @@ class MoneyEmbeddableTest {
 
         @Test
         @DisplayName("reconstructs the original MonetaryAmount")
-        void reconstructsMonetaryAmount() {
+        void should_reconstructMonetaryAmount_when_convertedBack() {
             MoneyEmbeddable money = MoneyEmbeddable.of(Money.of(new BigDecimal("49.00"), "EUR"));
 
             MonetaryAmount result = money.toMonetaryAmount();
